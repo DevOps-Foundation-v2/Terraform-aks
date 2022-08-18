@@ -5,8 +5,10 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
+variables:
+- group: secret
 
+steps:
 - task: TerraformInstaller@0
   inputs:
     terraformVersion: '1.2.3'
