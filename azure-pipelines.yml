@@ -18,6 +18,8 @@ steps:
     ssh-keygen -t rsa -b 4096 -N "VeryStrongSecret123!" -C "$(CORREO)" -q -f ~/.ssh/id_rsa
     SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
     echo $SSH_KEY
+    echo "##vso[task.setvariable variable=SET_SSH;isOutput=true]$SSH_KEY"
+  name: setssh
   displayName: Configuracion SSH
 - task: TerraformCLI@0
   inputs:
@@ -52,7 +54,7 @@ steps:
     command: 'apply'
     environmentServiceName: 'azure(9909fced-8203-44b6-af68-11f833a37e60)'
     runAzLogin: true
-    commandOptions: '-var ssh_key="$SSH_KEY"'
+    commandOptions: '-var ssh_key="$(setssh.SET_SSH)"'
     allowTelemetryCollection: true
   displayName: Terraform apply
   continueOnError: true
