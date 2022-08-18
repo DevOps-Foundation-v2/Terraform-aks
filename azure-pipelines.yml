@@ -12,6 +12,11 @@ steps:
     terraformVersion: '1.2.3'
   displayName: Instalacion Terraform
 
+- script: |
+    ssh-keygen -t rsa -b 4096 -N "VeryStrongSecret123!" -C "$(CORREO)" -q -f ~/.ssh/id_rsa
+    SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
+    echo $SSH_KEY
+  displayName: Configuracion SSH
 - task: TerraformCLI@0
   inputs:
     command: 'init'
@@ -45,7 +50,7 @@ steps:
     command: 'apply'
     environmentServiceName: 'azure(9909fced-8203-44b6-af68-11f833a37e60)'
     runAzLogin: true
-    #commandOptions: '-var ssh_key="$SSH_KEY"'
+    commandOptions: '-var ssh_key="$SSH_KEY"'
     allowTelemetryCollection: true
   displayName: Terraform apply
   continueOnError: true
